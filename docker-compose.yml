@@ -1,0 +1,33 @@
+version : "3.8"
+services :
+  mariadb :
+    container_name : mariadb
+    image : mariadb
+    restart: always
+    environment :
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=dockerci4_db
+      - MYSQL_USER=dockerci4_user
+      - MYSQL_PASSWORD=rahasia
+    ports :
+      - 3306:3306
+    networks : 
+      - dockerci4_net
+  dockerci4 :
+    container_name: dockerci4
+    image: dockerci4:v1.0
+    ports: 
+      - 80:80
+    links: 
+      - mariadb
+    depends_on:
+      - mariadb
+    volumes:
+        - ./.env:/var/www/html/.env:ro
+    networks :
+      - dockerci4_net
+networks :
+  dockerci4_net :
+    name : dockerci4_net
+
+
